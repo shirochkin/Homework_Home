@@ -1,0 +1,3 @@
+cmake_minimum_required(VERSION 3.22.0)
+project(cmake_shapes)
+add_executable(cmake_shapes main.cpp task3/EqualTriangle.cpp task3/EqualTriangle.h task3/Parallelogramm.cpp task3/Parallelogramm.h task3/PifagorTriangle.cpp task3/PifagorTriangle.h task3/Rect.cpp task3/Rect.h task3/Rhomb.cpp task3/Rhomb.h task3/shape.cpp task3/shape.h task3/Square.cpp task3/Square.h task3/SymmetricTriangle.cpp task3/SymmetricTriangle.h task3/tetragon.cpp task3/tetragon.h task3/triangle.cpp task3/triangle.h )
