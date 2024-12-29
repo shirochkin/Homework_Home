@@ -1,0 +1,3 @@
+﻿  Testing.cpp
+C:\Users\shiro\OneDrive\Рабочий стол\УЦИТ\СИ++\Домашка\Тестирование Задание 2\extended_array.h(64): warning C4715: ExtArray<int>::meanInterval: значение возвращается не при всех путях выполнения
+  Testing.vcxproj -> C:\Users\shiro\OneDrive\Рабочий стол\УЦИТ\СИ++\Домашка\Тестирование Задание 2\x64\Debug\Testing.exe
