@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBox->addItem("Item_3");
     ui->comboBox->addItem("Item_4");
     ui->comboBox->addItem("Item_5");
+    ui->pushButton->setCheckable(true);
     ui->pushButton->setText("Click here!");
     ui->pushButton = qobject_cast<QPushButton*>(ui->pushButton);
     ui->progressBar->setMinimum(100);
@@ -28,7 +29,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    if(ui->pushButton->isDown()){
+
+        ui->pushButton->setDown(false);
+    }
+    else{
+        ui->pushButton->setDown(true);
+    }
+
     int k = ui-> progressBar->value();
+
     if(k <= 460){
         ui->progressBar->setValue(k + 40);
     }
