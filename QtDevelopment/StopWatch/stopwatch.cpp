@@ -1,39 +1,18 @@
 #include "stopwatch.h"
 #include <QtWidgets>
-#include <windows.h>
 
-stopwatch::stopwatch() : timer{new QTimer()}, t{0}, h{0}, m{0}, s{0}, ms{0},
-    last{0}, notch_time{0} {
+stopwatch::stopwatch() : timer{new QTimer()} {
 };
 
 void stopwatch::start(){
-    timer->start(100);
+    isWorking = !isWorking;
+    if(isWorking){
+        timer->start(100);
+    }
+    else{
+        timer->stop();
+    }
 }
-
-/*void stopwatch::elapsed(){
-    int el_ms{0}, el_s{0}, el_m{0}, el_h{0};
-    while(true){
-    el_ms = timer->interval() - timer->remainingTime();
-
-    if(el_ms >= 3600000){
-        el_h = el_ms/3600000;
-        el_ms -= el_h*3600000;
-    }
-
-    if(el_ms >= 60000){
-        el_m = el_ms/60000;
-        el_ms -= el_m*60000;
-    }
-
-    if(el_ms >= 1000){
-        el_s = el_ms/1000;
-        el_ms -= el_s*1000;
-    }
-
-    elapsed_time->setHMS(QTime::currentTime().hour(), QTime::currentTime().minute(), QTime::currentTime().second(), QTime::currentTime().msec());
-    Sleep(100);
-    }
-}*/
 
 QString stopwatch::cur_time(){
     ++t;
@@ -57,18 +36,23 @@ QString stopwatch::cur_time(){
     return str_time;
 }
 
-void stopwatch::stop(){
-    timer->stop();
-}
-
-void stopwatch::circle(){
+QString stopwatch::circle(){
     notch_time = t;
-    str_circle = QString::number(notch_time - last);
+    double diff = notch_time - last;
+    str_circle = "Круг " + QString::number(N_circle) + ", Время: " + QString::number(diff/10) + " сек.";
    last = notch_time;
+    ++N_circle;
+    return str_circle;
 }
 
 
 void stopwatch::clear(){
-    //cur_time->setHMS(0, 0, 0, 0);
+    notch_time = 0; last = 0; ms = 0; s = 0; m = 0; h = 0; t=0;
+    N_circle = 0;
+    str_time = "0 h : 0 min : 0 sec : 0 ms";
+}
+
+QTimer* stopwatch::get(){
+    return timer;
 }
 

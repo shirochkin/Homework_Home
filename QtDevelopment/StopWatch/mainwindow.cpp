@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <windows.h>
 
 
 
@@ -9,11 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), sw{new stopwatch()}
 {
     ui->setupUi(this);
-    QPushButton* pb{ui->pushButton};
-    QPushButton* pb_2{ui->pushButton_2};
-    connect(pb, &QPushButton::clicked, this, &MainWindow::on_pushButton_clicked);
-    connect(sw->timer, &QTimer::timeout, this, &MainWindow::on_timeout);
-   connect(pb_2, &QPushButton::clicked, this, &MainWindow::on_pushButton_2_clicked);
+    ui->circle_button->setEnabled(false);
+    connect(sw->get(), &QTimer::timeout, this, &MainWindow::on_timeout);
 }
 
 MainWindow::~MainWindow()
@@ -22,11 +18,18 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_start_button_clicked()
 {
 
       sw->start();
-      ui->pushButton->setText("СТОП");
+    if(sw->isWorking){
+      ui->start_button->setText("СТОП");
+        ui->circle_button->setEnabled(true);
+    }
+    else{
+       ui->start_button->setText("СТАРТ");
+        ui->circle_button->setEnabled(false);
+    }
 
 }
 
@@ -35,10 +38,16 @@ ui->label->setText(sw->cur_time());
 }
 
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_circle_button_clicked()
 {
+    ui->textBrowser->append(sw->circle());
+}
 
-    sw->circle();
-    ui->textBrowser->append(sw->str_circle);
+
+void MainWindow::on_clear_button_clicked()
+{
+    sw->clear();
+    ui->label->setText("0 h : 0 min : 0 sec : 0 ms");
+    ui->textBrowser->clear();
 }
 

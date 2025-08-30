@@ -20,9 +20,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_start_button_clicked();
     void on_timeout();
-   void on_pushButton_2_clicked();
+   void on_circle_button_clicked();
+
+    void on_clear_button_clicked();
 
 private:
     Ui::MainWindow *ui;
