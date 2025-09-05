@@ -4,30 +4,80 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), sender{new UDPworker(this)}, receiver{new UDPworker(this)}
+    , ui(new Ui::MainWindow), worker{new UDPworker(this)}
 {
     ui->setupUi(this);
-    sender->InitSocket();
-    receiver->InitSocket();
-    sender->serviceUdpSocket->bind(QHostAddress::LocalHost);
-    receiver->serviceUdpSocket->bind(QHostAddress::LocalHost, BIND_PORT);
+    worker->InitSocket();
+    connect(worker, &UDPworker::sig_sendTimeToGUI, this, &MainWindow::DisplayTime);
+    connect(worker, &UDPworker::sig_sendTextToGUI, this, &MainWindow::DisplayText);
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [&]{
+
+        QDateTime dateTime = QDateTime::currentDateTime();
+
+        QByteArray dataToSend;
+        QDataStream outStr(&dataToSend, QIODevice::WriteOnly);
+
+        outStr << dateTime;
+
+        worker->SendDatagram(dataToSend);
+        worker->time_is_sent = 1;
+    });
+
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete timer;
+    delete worker;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pb_start_clicked()
+{
+    timer->start(TIMER_DELAY);
+}
+
+void MainWindow::DisplayTime(QDateTime data)
+{
+    counterPck++;
+    if(counterPck % 20 == 0){
+        ui->textEdit_2->clear();
+    }
+
+    ui->textEdit_2->append("Текущее время: " + data.toString() + ". "
+                                                                "Принято пакетов " + QString::number(counterPck));
+
+
+}
+
+void MainWindow::DisplayText(QString data)
+{
+    counterPck++;
+    if(counterPck % 20 == 0){
+        ui->textEdit_2->clear();
+    }
+
+    ui->textEdit_2->append("Принято сообщение от " + worker->sender_address + ", размер " + QString::number(worker->message_size)
+                           + " байт. Содержание: " + data + ". Принято пакетов " + QString::number(counterPck));
+
+
+}
+
+void MainWindow::on_pb_stop_clicked()
+{
+    timer->stop();
+}
+
+void MainWindow::on_pb_send_mes_clicked()
 {
     QByteArray arr;
     QDataStream out(&arr, QIODevice::WriteOnly);
     QString str = ui->textEdit->toPlainText();
     out << str;
-    sender->SendDatagram(arr);
-    receiver->readPendingDatagrams();
-    ui->textEdit_2->append("Принято сообщение от " + receiver->sender_address + ", размер " + QString::number(receiver->message_size)
-                           + " байт. Содержание: " + receiver->read);
+    worker->SendDatagram(arr);
+    worker->text_is_sent = 1;
 }
 
 

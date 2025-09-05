@@ -8,6 +8,7 @@
 
 #define BIND_PORT 12345
 
+
 class UDPworker : public QObject
 {
     Q_OBJECT
@@ -18,10 +19,11 @@ public:
     void SendDatagram(QByteArray data);
     QString sender_address;
     int message_size;
+    bool text_is_sent{0}, time_is_sent{0};
 
 
 public slots:
-    void readPendingDatagrams(void);
+    void readPendingDatagrams();
 
 public:
     QUdpSocket* serviceUdpSocket;
@@ -29,6 +31,7 @@ public:
 
 signals:
     void sig_sendTimeToGUI(QDateTime data);
+    void sig_sendTextToGUI(QString str);
 
 };
 

@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), sw{new stopwatch()}
 {
     ui->setupUi(this);
+    ui->label->setText("0 h : 0 min : 0 sec : 0 ms");
     ui->circle_button->setEnabled(false);
     connect(sw->get(), &QTimer::timeout, this, &MainWindow::on_timeout);
 }
